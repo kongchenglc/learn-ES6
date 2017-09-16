@@ -58,7 +58,7 @@ const itemsCopy = [...items];
 ```
 - 使用Array.from方法，将类似数组的对象转为数组。
 ```javascript
-const foo = document.querySelectorAll('.foo');      //不具有数组的方法
+const foo = document.querySelectorAll('.foo');      //NodeList不具有数组的方法
 const nodes = Array.from(foo);
 ```
 
