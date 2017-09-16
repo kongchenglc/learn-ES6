@@ -10,7 +10,7 @@
 - 静态字符串使用单引号或反引号，不使用双引号。
 - 动态字符串使用反引号，即模板字符串。
 
-### [解构赋值]()
+### [解构赋值](https://github.com/kongchenglc/learn-ES6/blob/master/Destructuring.js)
 - 使用数组成员对变量赋值时，优先使用结构赋值。
 ```javascript
 const arr = [1, 2, 3, 4];
