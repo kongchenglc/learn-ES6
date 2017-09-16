@@ -62,3 +62,35 @@ const foo = document.querySelectorAll('.foo');      //NodeList不具有数组的
 const nodes = Array.from(foo);
 ```
 
+### [函数]()
+- 立即执行函数写成箭头函数形式。
+```javascript
+(() => {
+  console.log('Welcome to the Internet.');
+})();
+```
+- 不要在函数内使用`arguments`变量，使用拓展运算符代替，这可以显式表明你想要获取参数，而且取到的不会是一个类数组。
+```javascript
+// bad
+function concatenateAll() {
+  const args = Array.prototype.slice.call(arguments);
+  return args.join('');
+}
+
+// good
+function concatenateAll(...args) {
+  return args.join('');
+}
+```
+- 使用默认值语法设置函数参数的默认值。
+```javascript
+// bad
+function handleThings(opts) {
+  opts = opts || {};
+}
+
+// good
+function handleThings(opts = {}) {
+  // ...
+}
+```
