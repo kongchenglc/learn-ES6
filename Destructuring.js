@@ -12,3 +12,15 @@
 
     //不完全解构
     let [x, y] = [1, 2, 3];
+
+    //报错的情况
+    //等号右边的值，要么转为对象以后不具备 Iterator 接口（前五个表达式），要么本身就不具备 Iterator 接口（最后一个表达式）。
+    let [foo] = 1;
+    let [foo] = false;
+    let [foo] = NaN;
+    let [foo] = undefined;
+    let [foo] = null;
+    let [foo] = {};
+
+    //set的解构也可以使用解构赋值
+    let [x, y, z] = new Set(['a', 'b', 'c']);
