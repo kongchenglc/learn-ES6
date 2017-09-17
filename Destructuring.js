@@ -14,13 +14,51 @@
     let [x, y] = [1, 2, 3];
 
     //报错的情况
-    //等号右边的值，要么转为对象以后不具备 Iterator 接口（前五个表达式），要么本身就不具备 Iterator 接口（最后一个表达式）。
-    let [foo] = 1;
-    let [foo] = false;
-    let [foo] = NaN;
-    let [foo] = undefined;
-    let [foo] = null;
-    let [foo] = {};
+        //等号右边的值，要么转为对象以后不具备 Iterator 接口（前五个表达式），要么本身就不具备 Iterator 接口（最后一个表达式）。
+        let [foo] = 1;
+        let [foo] = false;
+        let [foo] = NaN;
+        let [foo] = undefined;
+        let [foo] = null;
+        let [foo] = {};
 
-    //set的解构也可以使用解构赋值
-    let [x, y, z] = new Set(['a', 'b', 'c']);
+    //具有Iterator接口的数据结构都可以使用解构赋值
+        //set的解构也可以使用解构赋值
+        let [x, y, z] = new Set(['a', 'b', 'c']);
+
+        //生成器函数生成一个迭代器
+        function* fibs() {
+            let a = 0;
+            let b = 1;
+            while (true) {
+                yield a;
+                [a, b] = [b, a + b];
+            }
+        }
+
+        let [first, second, third, fourth, fifth, sixth] = fibs();
+        sixth // 5
+
+    //解构赋值允许默认值。
+        let [foo = true] = [];
+        let [x, y = 'b'] = ['a'];
+        let [x, y = 'b'] = ['a', undefined];
+
+        //如果数组成员不严格等于undefined，默认值不会生效
+        //null不严格等于undefined
+        let [x = 1] = [undefined];      // 1
+        let [x = 1] = [null];           // null
+
+        //默认值可以是一个表达式，表达式是惰性求值，只有在用到的时候，才会求职，下边的代码不会调用f
+        function f() {
+            alert('调用了');
+        }
+        let [a = f()] = [1];
+
+        //默认值可以引用解构赋值的其他变量，但变量必须以及声明
+        //函数的参数是具有块级作用域的，默认参数也可以这样理解
+        let [x = 1, y = x] = [];     // x=1; y=1
+        let [x = 1, y = x] = [2];    // x=2; y=2
+        let [x = 1, y = x] = [1, 2]; // x=1; y=2
+        let [x = y, y = 1] = [];     // ReferenceError
+
