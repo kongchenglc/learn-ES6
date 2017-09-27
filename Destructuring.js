@@ -112,5 +112,89 @@
     let { toString: s } = true;
     s === Boolean.prototype.toString // true
 
+
+//函数参数的解构赋值
+    [[1, 2], [3, 4]].map(([a, b]) => a + b);
+    // 返回[ 3, 7 ]
     
-//
+    //不传入参数时使用默认值传入{}，再默认传入x=0，y=0
+        function move({ x = 0, y = 0 } = {}) {
+            return [x, y];
+        }
+        console.log(move({ x: 3, y: 8 })); // [3, 8]
+        console.log(move({ x: 3 })); // [3, 0]
+        console.log(move({})); // [0, 0]
+        console.log(move()); // [0, 0]
+
+    //undefined就会触发函数参数的默认值。
+        [1, undefined, 3].map((x = 'yes') => x);
+        // [ 1, 'yes', 3 ]
+
+
+//解构赋值中可以使用圆括号的情形只有一种
+    //**赋值语句**的**非模式部分**，可以使用圆括号。
+    //赋值语句：没有let或者别的来定义，不是声明语句
+    [(b)] = [3]; // 正确
+    ({ p: (d) } = {}); // p是模式，正确
+    [(parseInt.prop)] = [3]; // 正确
+    
+
+
+//解构赋值的用途
+    1.交换变量的值
+        let x = 1;
+        let y = 2;
+        [x, y] = [y, x];
+
+    2.从函数返回多个值
+        //返回一个数组
+        function example() {
+            return [1, 2, 3];
+        }
+        let [a, b, c] = example();
+        //返回一个对象
+        function example() {
+            return {
+                foo: 1,
+                bar: 2
+            };
+        }
+        let { foo, bar } = example();
+
+    3.函数参数的定义
+        // 将对象解构赋值用来对应一组参数和变量名
+        // 参数是一组无次序的值
+        function f({ x, y, z }) { ... }
+        f({ z: 3, y: 2, x: 1 });
+        
+    4.提取JSON数据
+        let jsonData = {
+            id: 42,
+            status: "OK",
+            data: [867, 5309]
+        };
+
+        let { id, status, data: number } = jsonData;
+        
+    5.函数参数的默认值
+        let a = 2;
+        function fun(a, { b = 4 }) {
+            console.log(a, b);
+        }
+        fun(a, { b: 5 });
+        避免了在函数体内部再写var foo = config.foo || 'default foo'; 这样的语句。
+    
+    6.遍历Map结构
+        //map结构每次迭代返回一个两项的数组[key,value]
+        // 单独获取键名
+        for (let [key] of map) {
+            // ...
+        }
+
+        // 单独获取键值
+        for (let [, value] of map) {
+            // ...
+        }
+
+    7.输入模块的指定方法
+        const { SourceMapConsumer, SourceNode } = require("source-map");
