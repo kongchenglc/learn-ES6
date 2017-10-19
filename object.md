@@ -169,7 +169,7 @@ SomeClass.prototype.anotherMethod = function () {
 
 
 ##属性的可枚举性
-尽量不要用`for...in`循环，而用`Object.keys()`代替。  
+尽量不要用`for...in`循环，而用`Object.keys()`代替。因为`for...in`会遍历继承的属性，和其他的遍历有所区别。  
 目前有四个操作会忽略`enumerable`为`false`的属性。  
 - `for...in`循环：只遍历对象自身的和继承的可枚举的属性。
 - `Object.keys()`：返回对象自身的所有可枚举的属性的键名。
