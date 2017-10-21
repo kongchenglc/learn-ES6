@@ -178,3 +178,102 @@ SomeClass.prototype.anotherMethod = function () {
 
 
 ### 属性的遍历
+1. `for...in`  
+遍历自身和继承的可枚举属性。  
+2. `Object.keys(obj)`  
+遍历自身的可枚举属性。  
+3. `Object.getOwnPropertyNames(obj)`  
+返回一个数组，返回所有自身的键名（包括不可枚举属性，不包含Symbol属性）。  
+4. `Object.getOwnPropertySymbols(obj)`
+返回一个数组，包含对象自身的所有`Symbol`属性。
+5. `Reflect.ownKeys(obj)`  
+返回一个数组，包含对象自身的所有键名（Symbol和不可枚举的都会包含）。  
+
+以上的5种方法遍历对象的键名，都遵守同样的属性遍历的次序规则。  
+- 首先遍历所有数值键，按照数值升序排列。
+- 其次遍历所有字符串键，按照加入时间升序排列。
+- 最后遍历所有 Symbol 键，按照加入时间升序排列。
+
+
+## Object.getOwnPropertyDescriptor
+返回指定对象所有自身属性（非继承属性）的描述对象。
+```javascript
+const obj = {
+  foo: 123,
+  get bar() { return 'abc' }
+};
+
+Object.getOwnPropertyDescriptors(obj)
+// { foo:
+//    { value: 123,
+//      writable: true,
+//      enumerable: true,
+//      configurable: true },
+//   bar:
+//    { get: [Function: bar],
+//      set: undefined,
+//      enumerable: true,
+//      configurable: true } }
+```
+
+
+## 关于对象的原型
+
+### __proto___
+
+### Object.setPrototypeOf
+用来设置一个对象的`prototype`对象，返回**参数本身**。
+```javascript
+const o = Object.setPrototypeOf(obj, proto);
+//该方法等同于下面的函数。
+function (obj, proto) {
+  obj.__proto__ = proto;
+  return obj;
+}
+```
+如果第一个参数不是对象，会自动转为对象。但是由于返回的还是第一个参数，所以这个操作不会产生任何效果，参数不能转为对象时报错。  
+
+### Object.getPrototypeOf
+```javascript
+function Rectangle() {
+  // ...
+}
+
+const rec = new Rectangle();
+
+Object.getPrototypeOf(rec) === Rectangle.prototype
+// true
+
+Object.setPrototypeOf(rec, Object.prototype);
+Object.getPrototypeOf(rec) === Rectangle.prototype
+// false
+```
+
+
+## super关键字
+与`this`类似，指向当前对象的原型对象。  
+只能用在对象的方法之中，用在其他地方都会报错。  
+```javascript
+// 报错
+const obj = {
+  foo: function () {
+    return super.foo
+  }
+}
+
+//正确
+const obj = {
+  foo() {
+    return super.foo
+  }
+}
+```
+
+
+## Object.keys()，Object.values()，Object.entries()
+都是返回数组，不含继承的，所有可遍历（enumerable）的。
+- Object.entries
+返回一个数组，成员是对象的所有键值对数组。类似于下边。
+```javascript
+[ ["foo", "bar"], ["baz", 42] ]
+```
