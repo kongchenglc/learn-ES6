@@ -50,6 +50,43 @@ const { left, right } = processInput(input);
 ```
 
 ### [对象]()
+- 单行定义的对象，最后一个成员不以逗号结尾。  
+- 多行定义的对象，最后一个成员以逗号结尾。  
+```javascript
+// bad
+const a = { k1: v1, k2: v2, };
+const b = {
+  k1: v1,
+  k2: v2
+};
+
+// good
+const a = { k1: v1, k2: v2 };
+const b = {
+  k1: v1,
+  k2: v2,
+};
+```
+
+- 对象尽量静态化，一旦定义不要随意添加属性，实在要添加，使用`Object.assign`方法。
+- 对象的属性和方法，最好使用简洁表达法，易于描述和书写。
+- 对象的属性如果时动态的，使用属性表达式定义。
+```javascript
+// bad
+const obj = {
+  id: 5,
+  name: 'San Francisco',
+};
+obj[getKey('enabled')] = true;
+
+// good
+const obj = {
+  id: 5,
+  name: 'San Francisco',
+  [getKey('enabled')]: true,
+};
+```
+
 
 ### [数组]()
 - 使用扩展运算符（…）深拷贝数组。
