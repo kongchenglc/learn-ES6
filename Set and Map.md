@@ -37,3 +37,43 @@ dedupe([1, 1, 2, 3]) // [1, 2, 3]
 - forEach()：使用回调函数遍历每个成员，没有返回值。
 
 **注意**：`Set`中键名和键值是同一个值，所以`keys`方法和`values`方法的行为完全一致。
+
+#### 遍历的应用
+扩展运算符内部使用`for...of`循环，所以也可以用于`Set`结构。  
+数组的`map`和`filter`方法也可以用于 `Set` 。  
+  
+`Set`结构很容易实现`交集`、`并集`和`差集`。
+```javascript
+let a = new Set([1, 2, 3]);
+let b = new Set([4, 3, 2]);
+
+// 并集
+let union = new Set([...a, ...b]);
+// Set {1, 2, 3, 4}
+
+// 交集
+let intersect = new Set([...a].filter(x => b.has(x)));
+// set {2, 3}
+
+// 差集
+let difference = new Set([...a].filter(x => !b.has(x)));
+// Set {1}
+```
+在遍历操作中，同步改变原来的 `Set` 结构，目前没有直接的方法，但有两种变通方法。
+```javascript
+//转换为数组映射出新数组再转换
+let set = new Set([1, 2, 3]);
+set = new Set([...set].map(val => val * 2));
+
+//使用from方法
+let set = new Set([1, 2, 3]);
+set = new Set(Array.from(set, val => val *2));
+```
+
+### WeakSet
+类似于Set，有两个区别：
+- WeakSet 的成员只能是对象，而不能是其他类型的值。
+- WeakSet 中的对象都是弱引用。
+
+
+## Map
