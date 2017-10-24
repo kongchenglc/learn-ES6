@@ -77,3 +77,37 @@ set = new Set(Array.from(set, val => val *2));
 
 
 ## Map
+
+`JS`的对象本质上是键值对的集合，但是只能用字符串当作键（所以`obj[]`才会转字符串）。  
+在`ES6`中，如果要使用`键值对`的数据结构，`Map`比对象更合适。
+
+```javascript
+const m = new Map([
+  ['name', '张三'],
+  ['title', 'Author']
+]);
+const o = {p: 'Hello Map'};
+
+m.set(o, 'content');
+m.get(o);     //"content"
+
+m.has(o);     //true
+m.delete(o);  //true
+m.has(o);     //false
+```
+
+`Map`构造函数的实现：
+```javascript
+const items = [
+  ['name', '张三'],
+  ['title', 'Author']
+];
+
+const map = new Map();
+
+items.forEach(
+  ([key, value]) => map.set(key, value)
+);
+```
+所以说，具有遍历接口的、每个成员都是一个双元素的数组的结构都可以作为`Map`构造函数的参数。
+
