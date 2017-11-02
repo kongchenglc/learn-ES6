@@ -90,5 +90,5 @@ p.catch(error => {
 console.log(p);
 ```
 
-
-
+#### Promise.reject和Promise.resolve
+创建一个状态确定的`Promise`对象。
