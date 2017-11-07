@@ -13,7 +13,7 @@
 
 下面先通俗的讲述一下**ES5**中事件循环到底是怎么循环的，如图（据[阮一峰前辈的教程](http://www.ruanyifeng.com/blog/2014/10/event-loop.html)）：  
 
-![事件循环1](/imgs/sjxh.png)
+![事件循环1](https://github.com/kongchenglc/learn-ES6/blob/master/imgs/sjxh.png)
 
 图中有三大块：  
 - 函数调用栈：即执行栈。
@@ -33,7 +33,7 @@
 &emsp;&emsp;`ES6`标准中任务队列存在两种类型，一种就是上边提到的一些队列，比如`setTimeout`、网络请求`Ajax`、用户`I\O`等都属于宏观任务队列（microtask queue），另一种是微观任务队列（macrotask queue），`Promise`就属于微观任务队列。    
 &emsp;&emsp;添加了微观任务队列之后事件循环有什么变化呢？在执行栈执行的过程中会把属于微观任务队列的任务分配到相应的**微观任务队列**中去。而在调用栈执行空之后，主线程读取任务队列时，会先读取**所有微观任务队列**，然后读取**一个宏观任务队列**，**再读取所有的微观任务队列**。如图：
 
-![事件循环2](/imgs/rwdl.png)
+![事件循环2](https://github.com/kongchenglc/learn-ES6/blob/master/imgs/rwdl.png)
 
 &emsp;&emsp;好了，说了很多概念上的东西，不如一段代码来的清晰：
 ```javascript
