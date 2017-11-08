@@ -182,6 +182,7 @@ new Array(3).fill(7)
 ```
 
 ## entries(), keys(), values()
+遍历数组时不要使用`for in`方法，这是为对象设置的。需要读取键名的时候使用`keys`方法。  
 遍历数组的键、值、键值对：
 ```javascript
 for (let index of ['a', 'b'].keys()) {
