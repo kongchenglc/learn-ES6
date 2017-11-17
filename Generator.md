@@ -82,4 +82,27 @@ for (let [key, value] of jane) {
 ## Generator.prototype.return()
 结束遍历，之后`next`方法返回的`done`属性都为`true`。
 
-## yield 语句
+## yield* 语句
+`yield*`语句后面跟另一个生成器对象，将这个对象的遍历插入当前遍历。  
+只要由遍历器接口的对象都可以跟在`yield*`语句后面。  
+`yield*`语句的**返回值**可以由被代理的生成器函数的`return`语句返回。
+```javascript
+function* foo() {
+  yield 'aa';
+  yield 'ba';
+  return "nnn";
+}
+
+function* bar() {
+  let n = yield* foo();
+  yield* ["a","b","c"];
+  yield 'y';
+  yield n;
+}	
+let c = bar();
+console.log(c.next().value);
+```
+`yield`语句可以用来实现**数组扁平化**。
+```javascript
+
+```
