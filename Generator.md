@@ -15,7 +15,7 @@
 
 ## next 方法
 `next`的参数可以在生成器函数代码执行的过程中**注入值**。
-`next`参数的值指定的是上一个`yield`语句的值。
+`next`参数的值指定的是上一个`yield`语句的值。所以第一个`next`的参数是没有用的，这个`next`是用来**启动遍历器对象**的。
 ```javascript
 function* a(val = 0) {
   let d = (yield val);
@@ -23,8 +23,63 @@ function* a(val = 0) {
   return e;
 }
 let c = a(1);
-console.log(c[Symbol.iterator]().next());       //{done: false, value: 1}
+console.log(c[Symbol.iterator]().next());       //{done: false, value: 1}   启动遍历器对象
 console.log(c[Symbol.iterator]().next(3));      //{done: false, value: 3}
 console.log(c[Symbol.iterator]().next(4));      //{done: true, value: 7}
 ```
 
+## for...of方法
+`for...of`用来遍历遍历器对象时，只要返回对象的`done`属性是`true`就不会再返回了。  
+所以说生成器函数的`return`语句之后的内容不会在`for...of`时返回。
+  
+由于**解构赋值**、**扩展运算符（...）**、**Array.from**方法内部调用的都是遍历器接口，所以`Generator`函数的返回值可以作为这些方法的参数。  
+不具有遍历器接口的原生对象可以用以下方法添加遍历器接口：
+```javascript
+function* objectEntries() {var g = function* () {
+  while (true) {
+    try {
+      yield;
+    } catch (e) {
+console.log('内部捕获', e);
+
+      if (e != 'a') throw e;
+      console.log('内部捕获', e);
+    }
+  }
+};
+
+var i = g();
+i.next();
+
+try {
+  throw new Error('a');
+  throw new Error('b');
+} catch (e) {
+  console.log('外部捕获', e);
+}
+  let propKeys = Object.keys(this);
+
+  for (let propKey of propKeys) {
+    yield [propKey, this[propKey]];
+  }
+}
+
+let jane = { first: 'Jane', last: 'Doe' };
+
+jane[Symbol.iterator] = objectEntries;
+
+for (let [key, value] of jane) {
+  console.log(`${key}: ${value}`);
+}
+```
+
+## Generator.prototype.throw()
+遍历器对象都有一个`throw`方法，在函数外部抛出错误，在生成器内部捕获。  
+全局的`throw`方法和遍历器对象方法是有区别的，全局的`throw`只能在函数体外用`catch`捕获。  
+遍历器对象的`throw`方法，如果遍历器内部已经没有`catch`，也可以由外部的`catch`来捕获。  
+`throw`方法被捕获以后，会附带执行下一条`yield`表达式。也就是说，会附带执行一次`next`方法。
+
+## Generator.prototype.return()
+结束遍历，之后`next`方法返回的`done`属性都为`true`。
+
+## yield 语句
