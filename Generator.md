@@ -102,7 +102,46 @@ function* bar() {
 let c = bar();
 console.log(c.next().value);
 ```
-`yield`语句可以用来实现**数组扁平化**。
+`yield`语句可以用来实现**数组扁平化**。  
+同样的，还能用来遍历树结构。
 ```javascript
+let arr = [1,2,1,[9,5,[2,7]],3,8,]
+function* flat(arr) {
+  for(let item of arr) {
+    if(Array.isArray(item)) {
+      yield* flat(item);
+    } else {
+      yield item;
+    }
+  }
+}
+for(let a of flat(arr)){
+  console.log(a);
+}
+```
 
+## Generator函数的this
+`Generator`函数不能作为构造函数。但是返回的遍历器对象，继承自`Generator`的`prototype`。  
+想在`Generator`函数内部为遍历器对象添加方法可以使用绑定`this`的方法，使`this`指向`Generator`的`prototype`。
+再包装一层普通函数，就可以当作构造函数使用了。
+```javascript
+function* gen() {
+  this.a = 1;
+  yield this.b = 2;
+  yield this.c = 3;
+}
+
+function F() {
+  return gen.call(gen.prototype);
+}
+
+var f = new F();
+
+f.next();  // Object {value: 2, done: false}
+f.next();  // Object {value: 3, done: false}
+f.next();  // Object {value: undefined, done: true}
+
+f.a // 1
+f.b // 2
+f.c // 3
 ```
