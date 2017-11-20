@@ -160,23 +160,29 @@ var clock = function* () {
 ```
 
 ## 用于异步任务的封装
+可以将异步操作简洁的表示为类似于同步的写法。只是多一个`yield`。  
+用协程来理解：在遇到异步操作之后把执行权移出`Generator`函数，外部的`promise`会在异步任务完成之后将控制权重新交回到`Generator`函数中。
 ```javascript
 //封装一个fetch请求
 var fetch = require('node-fetch');
 
 function* gen(){
   var url = 'https://api.github.com/users/github';
-  var result = yield fetch(url);
+  var result = yield fetch(url);    //将异步操作简洁表示
   console.log(result.bio);
 }
 
 //执行异步函数
 var g = gen();
 var result = g.next();
-
+console.log(result);
+//{ value: Promise { <pending> }, done: false }
 result.value.then(function(data){
   return data.json();
 }).then(function(data){
   g.next(data);
 });
 ```
+
+## Thunk函数
+可以自动接收和交还程序的控制权。
