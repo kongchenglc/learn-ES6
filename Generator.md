@@ -145,3 +145,38 @@ f.a // 1
 f.b // 2
 f.c // 3
 ```
+
+## 用生成器函数实现状态机
+这种实现比使用一个变量保存状态更简洁，更安全（不会被篡改状态变量）。
+```javascript
+var clock = function* () {
+  while (true) {
+    console.log('Tick!');
+    yield;
+    console.log('Tock!');
+    yield;
+  }
+};
+```
+
+## 用于异步任务的封装
+```javascript
+//封装一个fetch请求
+var fetch = require('node-fetch');
+
+function* gen(){
+  var url = 'https://api.github.com/users/github';
+  var result = yield fetch(url);
+  console.log(result.bio);
+}
+
+//执行异步函数
+var g = gen();
+var result = g.next();
+
+result.value.then(function(data){
+  return data.json();
+}).then(function(data){
+  g.next(data);
+});
+```
