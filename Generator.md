@@ -185,4 +185,24 @@ result.value.then(function(data){
 ```
 
 ## Thunk函数
-可以自动接收和交还程序的控制权。
+本质是利用函数柯里化将回调函数（callback）抽离。
+```javascript
+//一个Thunk函数转换器
+var Thunk = function(fn) {
+  return function() {                                     //返回fn对应的Thunk函数
+    var args = Array.prototype.slice.call(arguments);     //将所有参数装在args数组
+    return function(callback) {                           //Thunk函数执行后会返回一个接收callback的函数
+      args.push(callback);                                //在得到所有参数之后再执行fn
+      return fn.apply(this, args);
+    } 
+  }
+}
+
+//使用转换器转换fs.readFile函数
+var readFileThunk = Thunk(fs.readFile);
+readFileThun(fileA)(callback);    //Thunk函数的执行
+```
+用于生产环境的转换器，建议使用`Thunkify`模块。  
+
+### Generator函数的流程管理
+可以自动接收和交还程序的控制权。  
