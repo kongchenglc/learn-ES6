@@ -184,8 +184,16 @@ result.value.then(function(data){
 });
 ```
 
-## Thunk函数
-本质是利用函数柯里化将回调函数（callback）抽离。
+
+
+## Generator函数的流程管理
+可以自动接收和交还程序的控制权。可以基于**回调函数**，也可以基于**Promise对象**。  
+1. Thunk（回调函数）。将异步操作包装成 Thunk 函数，在回调函数里面交回执行权。
+2. Promise 对象。将异步操作包装成 Promise 对象，用then方法交回执行权。
+
+### 1 回调函数实现
+#### 1.1 Thunk函数
+本质是利用函数柯里化将回调函数（callback）抽离。当传入第一部分参数时不会执行，当传入回调函数时才执行。
 ```javascript
 //一个Thunk函数转换器
 var Thunk = function(fn) {
@@ -202,7 +210,91 @@ var Thunk = function(fn) {
 var readFileThunk = Thunk(fs.readFile);
 readFileThun(fileA)(callback);    //Thunk函数的执行
 ```
-用于生产环境的转换器，建议使用`Thunkify`模块。  
+用于生产环境的转换器，建议使用`Thunkify`模块。下面是使用`Thunkify`模块转换一个`Thunk`函数。  
+```javascript
+var fs = require('fs');
+var thunkify = require('thunkify');
+var readFileThunk = thunkify(fs.readFile);
 
-### Generator函数的流程管理
-可以自动接收和交还程序的控制权。  
+var gen = function* (){
+  var r1 = yield readFileThunk('/etc/fstab');
+  console.log(r1.toString());
+  var r2 = yield readFileThunk('/etc/shells');
+  console.log(r2.toString());
+};
+```
+
+#### 1.2 Thunk函数的自动流程管理
+基于 `Thunk` 函数的 `Generator` 执行器，用来执行上边的`gen`函数:
+```javascript
+function run(fn) {
+  var gen = fn();   //返回遍历器对象
+
+  function next(err, data) {
+    var result = gen.next(data);    
+    //result的value是一个只接收回调函数的函数，接收到回调函数将开始执行异步任务。
+    if(result.done) return;
+    result.value(next);
+  }
+
+  next();
+}
+run(gen);
+```
+> &emsp;&emsp;自动执行的核心在于递归，在`Generator`函数中的`Thunk`函数被调用时将执行权释放，只接收回调函数的函数，执行器中的`result`接收到这个`Thunk`函数（result.value）。如果`done`属性不为真，传入回调函数`callback`执行异步任务，回调函数就是会执行下一个`yield`的`next`函数。  
+&emsp;&emsp;`next`函数的第二个参数就是异步任务执行返回的结果，通过调用`gen.next(data)`，将控制权交还给`Generator`函数，并将`data`返回。
+
+
+
+### 1 Promise对象实现
+#### 1.1 包装异步任务到Promise对象
+类似的，把`fs`模块的`readFile`方法包装成一个 `Promise` 对象。
+```javascript
+var fs = require('fs');
+var readFile = function(fileName) {
+  return new Promise(function(resolve, reject) {
+    fs.readFile(fileName, function(error, data) {
+      if(error) return rejcect(error);
+      resolve(data);
+    });
+  });
+}
+
+var gen = function* (){
+  var f1 = yield readFile('/ect/fstad');
+  var f2 = yield readFile('/ect/shells');
+}
+```
+
+#### 1.2 Promise对象的自动执行器
+```javascript
+function run(gen) {
+  var g = gen();
+
+  function next(data) {
+    var result = g.next(data);
+    if(result.done) return result.value;
+    result.value.then(function(data) {
+      next(data);
+    })
+  }
+
+  next();
+}
+run(gen);
+```
+
+
+
+## co模块
+`co` 模块其实就是将两种自动执行器（Thunk 函数和 Promise 对象），包装成一个模块。使用 `co` 的前提条件是，`Generator` 函数的yield命令后面，只能是 `Thunk` 函数或 `Promise` 对象。
+```javascript
+var co = require('co');
+co(gen).then(function (){
+  console.log('Generator 函数执行完成');
+});
+```
+
+### co 模块源码
+#### co 支持并发的异步操作
+#### 处理Stream
