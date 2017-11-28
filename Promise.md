@@ -38,7 +38,7 @@ Promise对象代表一个异步操作，有3种状态：
 let errorMessage = "It's error";
 const promise = new Promise(
     (resolve, reject)=> {
-        setTimeout(resolve, 3000, errorMessage);
+        setTimeout(reject, 3000, errorMessage);
     }
 );
 
