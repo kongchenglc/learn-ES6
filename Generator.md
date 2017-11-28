@@ -296,5 +296,6 @@ co(gen).then(function (){
 ```
 
 ### co 模块源码
+  检查是否是`promise`或者`thunk`函数，然后进行相应操作
 #### co 支持并发的异步操作
 #### 处理Stream
