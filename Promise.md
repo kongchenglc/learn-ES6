@@ -75,10 +75,10 @@ console.log(p);
 ```javascript
 const p = Promise.race([
     new Promise(function (resolve, reject) {
-    setTimeout(() => resolve('request resolved'), 3000)
+        setTimeout(() => resolve('request resolved'), 3000)
     }),
     new Promise(function (resolve, reject) {
-    setTimeout(() => reject(new Error('request timeout')), 4000)
+        setTimeout(() => reject(new Error('request timeout')), 4000)
     })
 ]);
 p.catch(error => {
