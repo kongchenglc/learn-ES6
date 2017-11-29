@@ -31,7 +31,7 @@ function spawn(genF) {
             }
             //使用Promise.resolve使其可以支持原始类型的值，保证返回一个Promise对象
             Promise.resolve(next.value)
-            .then(v => step( () => gen.next(v) )  
+            .then(v => step( () => gen.next(v) )  //调用后next.value作为结果返回
             , e => step( () => gen.throw(e) ));
         }
         //调用step进行递归执行gen
@@ -60,8 +60,8 @@ const readFile  = function (fileName) {
 
 //用生成器函数和co实现
 const gen = function* (){
-    const f1 = readFile('/ect/f1');
-    const f2 = readFile('/ect/f2');
+    const f1 = yield readFile('/ect/f1');
+    const f2 = yield readFile('/ect/f2');
 }
 co(gen);        //返回一个Promise对象
 
@@ -89,3 +89,20 @@ async function asyncPrint(value, ms) {
 asyncPrint('hello world', 50);
 ```
 
+## async的错误处理机制
+
+### 返回Promise对象
+`async`函数返回一个`Promise`对象。  
+`async`函数内部`return`语句返回的值，会成为`then`方法回调函数的参数。  
+`async`函数内部抛出错误，会导致返回的`Promise`对象变为`reject`状态。  
+```javascript
+async function f() {
+  throw new Error('出错了');
+}
+
+f().then(
+  v => console.log(v),
+  e => console.log(e)   //被调用
+)
+// Error: 出错了
+```
