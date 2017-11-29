@@ -1,6 +1,45 @@
 # async 函数
 `async`函数属于`ES7`，是一个`Generator`函数的语法糖。  
 `async`函数可以自动执行`Generator`函数。  
+`async`函数的实现原理，就是将`Generator`函数和自动执行器，包装在一个函数里。  
+```javascript
+async function fn(args) {
+    // ...
+}
+
+// 等同于
+
+function fn(args) {
+    //spawn函数是自动执行器
+    return spawn(function* () {
+    // ...
+    });
+}
+
+//spawn函数的实现
+function spawn(genF) {
+    return new Promise((resolve, reject) => {
+        let gen = genF();
+        function step(nextF) {
+            try {
+                var next = nextF();
+            } catch(e) {
+                return reject(e);
+            }
+            if(next.done) {
+                return resolve(next.value);
+            }
+            //使用Promise.resolve使其可以支持原始类型的值，保证返回一个Promise对象
+            Promise.resolve(next.value)
+            .then(v => step( () => gen.next(v) )  
+            , e => step( () => gen.throw(e) ));
+        }
+        //调用step进行递归执行gen
+        step( () => gen.next(undefined) );
+    });
+}
+```
+
 与`co`模块使用的区别在于：
 - `co`模块执行的`Generator`函数的`yield`语句后可以是`Promise`对象或者`Thunk`函数。
 - `async`函数`await`后可以是`Promise`对象或者原始类型的值（数值、字符串和布尔值，但这时等同于同步操作）。
@@ -33,3 +72,20 @@ const asyncReadFile = async function() {
 }
 let result = asyncReadFile();   //返回一个Promise对象
 ```
+
+一个例子，指定多少毫秒后输出一个值。
+```javascript
+function timeout(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+async function asyncPrint(value, ms) {
+  await timeout(ms);
+  console.log(value);
+}
+
+asyncPrint('hello world', 50);
+```
+
