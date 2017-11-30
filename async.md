@@ -90,7 +90,7 @@ asyncPrint('hello world', 50);
 ```
 
 ## async的错误处理机制
-
+`async`函数的语法规则总体上比较简单，难点是错误处理机制。
 ### 返回Promise对象
 `async`函数返回一个`Promise`对象。  
 `async`函数内部`return`语句返回的值，会成为`then`方法回调函数的参数。  
@@ -105,4 +105,17 @@ f().then(
   e => console.log(e)   //被调用
 )
 // Error: 出错了
+```
+返回的`Promise`的状态，必须等到内部所有`await`命令后面的`Promise`对象执行完，才会发生状态改变，除非遇到`return`语句或者抛出错误。  
+`await`命令后面的`Promise`对象如果变为`reject`状态，则`reject`的参数会被`catch`方法的回调函数接收到。
+```javascript
+async function f() {
+  await Promise.reject('出错了');
+  await Promise.resolve('hello world'); // 不会执行
+}
+
+f()
+.then(v => console.log(v))
+.catch(e => console.log(e))
+// 出错了
 ```
