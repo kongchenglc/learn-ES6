@@ -253,3 +253,22 @@ let b = new B();
 
 #### 作为父类
 `super`作为对象，用在静态方法之中，这时`super`将指向父类，而不是父类的原型对象。
+
+
+### 类的原型链
+`Class`作为构造函数的语法糖，同时有`prototype`属性和`__proto__`属性，因此同时存在两条继承链。  
+- 一条是自己作为对象对类的静态属性的继承，指向父类。
+- 另一条是子类的原型对象，对方法的继承，指向父类的`prototype`属性。
+```javascript
+class A {
+}
+
+class B extends A {
+}
+
+B.__proto__ === A // true
+B.prototype.__proto__ === A.prototype // true
+```
+
+### extends的继承目标
+只要是一个有`prototype`属性的函数，就能被继承。由于函数都有`prototype`属性，所以任意函数都能被继承。  
