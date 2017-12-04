@@ -272,3 +272,10 @@ B.prototype.__proto__ === A.prototype // true
 
 ### extends的继承目标
 只要是一个有`prototype`属性的函数，就能被继承。由于函数都有`prototype`属性，所以任意函数都能被继承。  
+
+
+### 继承原生构造函数
+
+
+### Mixin 模式实现
+多继承
