@@ -47,7 +47,7 @@ obj.isTestable // true
 方法的修饰器函数接收三个参数。  
 1. `target`表示原型对象而不是类。
 2. `name`表示修饰的方法的名字。
-3. `descriptor`表示描述对象，描述对象用来描述被修饰的方法。
+3. `descriptor`表示**描述对象**，描述对象用来描述被修饰的方法。
 
 ```javascript
 class Math {
