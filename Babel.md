@@ -42,5 +42,14 @@ $ babel src -d lib
 
 
 ## babel-register
+`babel-register`模块改写`require`命令，为它加上一个钩子。此后，每当使用`require`加载`.js`、`.jsx`、`.es`和`.es6`后缀名的文件，就会先用`Babel`进行转码。
 
-...
+## babel-core
+如果某些代码需要调用`Babel`的`API`进行转码，就要使用`babel-core`模块。
+
+## babel-polyfill
+Babel默认只转换新的JavaScript句法（syntax），而不转换新的API，比如Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等全局对象，以及一些定义在全局对象上的方法（比如Object.assign）都不会转码。
+
+## 浏览器环境
+
+## 在线转换
