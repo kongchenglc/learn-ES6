@@ -7,7 +7,7 @@
 - `CMD`类似于`AMD`，但是对于依赖的模块是尽可能延迟执行，`AMD`是尽可能早的执行。
 - `Model`将成为通用的解决方案。
 
-> `export`语句输出的接口，和其对应的值是动态绑定关系，可以取到模块内实时的值。 `CommonJS`模块输出的是值的缓存，不存在动态更新。
+> `export`语句输出的接口，和其对应的值是动态绑定关系，可以取到模块内实时的值（动态只读引用）。 `CommonJS`模块输出的是值的缓存，不存在动态更新。
 
 ## export 命令
 `export`用来指定对外部的接口。可以用来输出变量、函数和类。
@@ -187,7 +187,10 @@ console.log(B); // 3
 
 
 ## 按需加载的提议：import()
-
+为了兼容 Node 下 require ，有一个提议。  
+import命令能够接受什么参数，import()函数就能接受什么参数，两者区别主要是后者为动态加载。  
+不需要静态分析。  
+import()返回一个 Promise 对象。
 
 ## Model 的加载实现
 
@@ -217,3 +220,7 @@ console.log(B); // 3
 - 同一个模块如果加载多次，将只执行一次。
 
 ### Node 加载
+#### ES6 模块加载 CommonJS 模块
+Node 的import命令加载 CommonJS 模块，Node 会自动将module.exports属性，当作模块的默认输出，即等同于export default xxx。
+#### CommonJS 模块加载 ES6 模块
+使用 import() 。
