@@ -2,15 +2,15 @@
 
 ## ES6编程风格
 
-### [块级作用域](https://github.com/kongchenglc/learn-ES6/blob/master/let%20and%20const.js)
+### 块级作用域
 - `let`完全代替`var`，不使用`var`。
 - `const`优先使用，编译器会对`const`进行优化，提升程序运行效率。
 
-### [字符串]()
+### 字符串
 - 静态字符串使用单引号或反引号，不使用双引号。
 - 动态字符串使用反引号，即模板字符串。
 
-### [解构赋值](https://github.com/kongchenglc/learn-ES6/blob/master/Destructuring.js)
+### 解构赋值
 - 使用数组成员对变量赋值时，优先使用结构赋值。
 ```javascript
 const arr = [1, 2, 3, 4];
@@ -49,7 +49,7 @@ function processInput(input) {
 const { left, right } = processInput(input);
 ```
 
-### [对象]()
+### 对象
 - 单行定义的对象，最后一个成员不以逗号结尾。  
 - 多行定义的对象，最后一个成员以逗号结尾。  
 ```javascript
@@ -88,7 +88,7 @@ const obj = {
 ```
 
 
-### [数组]()
+### 数组
 - 使用扩展运算符（…）深拷贝数组。
 ```javascript
 const itemsCopy = [...items];
@@ -99,7 +99,7 @@ const foo = document.querySelectorAll('.foo');      //NodeList不具有数组的
 const nodes = Array.from(foo);
 ```
 
-### [函数]()
+### 函数
 - 立即执行函数写成箭头函数形式。
 ```javascript
 (() => {
@@ -131,3 +131,13 @@ function handleThings(opts = {}) {
   // ...
 }
 ```
+
+### Map结构
+如果需要键值对的数据结构，使用`Map`。  
+在模拟现实的对象时再用`Object`。
+
+### Class
+总是用 `Class`，取代需要 `prototype` 的操作。因为 `Class` 的写法更简洁，更易于理解。
+
+### 模块
+`Module` 语法是 `JavaScript` 模块的标准写法，坚持使用这种写法。使用`import`取代`require`。
