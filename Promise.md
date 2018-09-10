@@ -49,6 +49,22 @@ let result = promise
 console.log(result);
 ```
 
+`then`可以接受两个函数，第二个函数用于错误处理，返回的`Promise`状态由处理函数决定。
+```js
+let errorMessage = "It's error";
+const promise = new Promise(
+    (resolve, reject)=> {
+        setTimeout(reject, 3000, errorMessage);
+    }
+);
+
+//Promise的链式操作
+let result = promise
+    .then( a => console.log(a),     // 不会执行a，因为函数为reject状态
+           b => console.log(b))     // 执行b，处理错误，返回resolved状态promise
+    .catch( a => console.log("catch" + a) );    //不会执行
+```
+
 ### Promise的一些方法
 
 #### all方法
