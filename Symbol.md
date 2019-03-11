@@ -4,7 +4,7 @@
 如果 `Symbol` 的参数是一个对象，就会调用该对象的`toString`方法，将其转为字符串，然后才生成一个 `Symbol` 值。  
 
 ## 唯一性
-**Symbol函数的参数只是表示对当前 Symbol 值的描述，因此相同参数的Symbol函数的返回值是不相等的。**
+**Symbol函数的参数只是表示对当前 Symbol 值的描述（控制台输出、查看等），因此相同参数的Symbol函数的返回值是不相等的。**
 ```javascript
 // 没有参数的情况
 let s1 = Symbol();
